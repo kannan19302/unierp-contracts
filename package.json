@@ -10,5 +10,10 @@
   },
   "devDependencies": {
     "typescript": "^5.7.0"
-  }
+  },
+  "files": [
+    "dist",
+    "src",
+    "README.md"
+  ]
 }
