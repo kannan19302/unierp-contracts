@@ -1,48 +1,27 @@
 # unierp-contracts
 
-**Layer 0 — the root of the UniERP dependency graph.**
+**Layer L0 — Contract** of the [UniERP](../unierp-platform) platform.
+Depends on: nothing.
 
-The single source of truth for API contracts, event schemas, and shared entity
-types. Publishes `@unerp/contracts` and `@unerp/events`.
+## What this is
 
-## Why this repository has no dependencies
+Every API shape, event schema and shared entity type. OpenAPI, DTOs, clients and event typings are all *generated* from here.
 
-L0 depends on nothing, by construction. That is not an accident of the current
-code — it is the property that keeps the whole fifteen-repository graph acyclic
-for the life of the platform:
+## The invariant this repository owns
 
-> "Because L0 has zero dependencies, it can never be made to depend on an
-> implementation. That is the single property that keeps the whole graph acyclic
-> for twenty years."
-> — `PLATFORM_ARCHITECTURE.md` § 7.1
+**Zero dependencies, by construction.** It can never be made to depend on an implementation — that single property is what keeps the whole dependency graph acyclic. CI asserts the dependency count is 0.
 
-Adding a dependency here — on the API, on Prisma, on a UI package — is not a
-refactor to be reviewed on its merits. It inverts the layering, and CI rejects
-it.
+## The rule that applies everywhere
 
-## What lives here
+A repository may depend only on published artifacts of a **strictly lower
+layer** — never sideways within a layer, never upward. A cycle is not
+discouraged; it is unrepresentable, because the lower layer's package cannot
+name the higher one.
 
-```
-src/
-├── http/      Zod schemas per endpoint  →  OpenAPI 3.1, Nest DTOs, TS/Py/Java/Go clients
-├── events/    Domain event schemas      →  outbox publisher + consumer types, AsyncAPI
-└── entities/  Shared domain types       →  extension-api typings
-```
+See the [platform overview](../unierp-platform/README.md) for the full map, and
+[`PLATFORM_ARCHITECTURE.md`](../ERPSys/docs/PLATFORM_ARCHITECTURE.md) § 4.2 for
+the reasoning.
 
-Downstream artefacts are **generated** from these definitions. Hand-editing
-generated output is a build failure (ADR-008); adding an endpoint means editing
-the contract first.
+## Licence
 
-## Extraction status
-
-Extracted from the `ERPSys` monorepo as § 14 Phase 3.1 — the first extraction,
-chosen because it has no dependencies and is therefore the safest to move.
-
-**The monorepo copy at `packages/contracts` is still authoritative.** Per § 14,
-a consumer is only switched to the published package after that package is
-publishable, and the monorepo remains buildable at each extraction tag until its
-consumers have switched. Until a registry is available this repository is the
-extraction target, not yet the source of truth.
-
-Rollback is a one-line `pnpm` override change pointing consumers back at the
-workspace path.
+AGPL-3.0.
