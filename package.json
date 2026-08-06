@@ -1,6 +1,6 @@
 {
   "name": "@unerp/contracts",
-  "version": "1.0.2",
+  "version": "1.0.4",
   "description": "L0 — single source of truth for UniERP API contracts, event schemas, and entity types",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
