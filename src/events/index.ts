@@ -53,3 +53,5 @@ export interface ExtensionInstalledEvent extends DomainEvent<{
 }> {
   eventType: "platform.extension.installed";
 }
+
+export * from "./notification.js";

@@ -38,3 +38,5 @@ export interface AuditLogEntry {
   occurredAt: Date;
   correlationId?: string;
 }
+
+export * from "./notification.js";

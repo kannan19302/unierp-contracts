@@ -48,3 +48,5 @@ export interface ProvisionTenantResponse {
   adminUserId: string;
   setupToken: string;
 }
+
+export * from "./notification.js";
