@@ -3,7 +3,7 @@
  * The storage shapes the notification engine reads and writes
  * (`Notification`, `NotificationPreference`, `NotificationDeliveryLog`,
  * `NotificationTemplate`, `NotificationDigest`, `NotificationChannel` in
- * `@unerp/database`). All IDs are strings; dates are `Date` to match the
+ * `@kannan19302/database`). All IDs are strings; dates are `Date` to match the
  * Prisma-generated client.
  */
 

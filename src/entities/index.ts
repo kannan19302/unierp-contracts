@@ -1,6 +1,6 @@
 /**
  * L0 Entity contracts — zero dependencies.
- * These are the shared domain types that @unerp/* packages compile against.
+ * These are the shared domain types that @kannan19302/* packages compile against.
  * All IDs are strings to avoid hard foreign-key dependencies between domains (ADR).
  */
 
