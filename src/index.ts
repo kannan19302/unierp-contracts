@@ -8,4 +8,5 @@ export * from "./http/index.js";
 export * from "./events/index.js";
 export * from "./residency.js";
 export * from "./settings.js";
+export * from "./settings-resolution.js";
 
