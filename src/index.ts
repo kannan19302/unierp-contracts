@@ -10,4 +10,5 @@ export * from "./residency.js";
 export * from "./settings.js";
 export * from "./settings-resolution.js";
 export * from "./settings-migration.js";
+export * from "./settings-promotion.js";
 
