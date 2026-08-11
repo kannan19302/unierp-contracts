@@ -7,4 +7,5 @@ export * from "./entities/index.js";
 export * from "./http/index.js";
 export * from "./events/index.js";
 export * from "./residency.js";
+export * from "./settings.js";
 
