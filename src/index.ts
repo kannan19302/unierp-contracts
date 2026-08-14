@@ -15,5 +15,6 @@ export * from "./errors.js";
 export * from "./health.js";
 export * from "./money.js";
 export * from "./online-schema-change.js";
+export * from "./fixtures.js";
 
 
