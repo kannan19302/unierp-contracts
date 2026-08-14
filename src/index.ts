@@ -36,5 +36,6 @@ export * from "./api-versioning.js";
 export * from "./contract-compatibility.js";
 export * from "./deprecation.js";
 export * from "./consumer-contract-test.js";
+export * from "./sdk-compatibility.js";
 
 
