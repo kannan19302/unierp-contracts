@@ -104,3 +104,35 @@ export function assertDartDifferentialParity(
   }
   return { verified: true };
 }
+
+export class NonDeterministicGenerationError extends Error {
+  public readonly contractId: string;
+  public readonly firstRunHash: string;
+  public readonly secondRunHash: string;
+
+  constructor(contractId: string, firstRunHash: string, secondRunHash: string) {
+    super(
+      `Non-deterministic client generation detected for contract "${contractId}". Generation run 1 hash (${firstRunHash}) !== Generation run 2 hash (${secondRunHash}).`
+    );
+    this.name = "NonDeterministicGenerationError";
+    this.contractId = contractId;
+    this.firstRunHash = firstRunHash;
+    this.secondRunHash = secondRunHash;
+  }
+}
+
+/**
+ * Asserts client generation determinism between two generation passes from the exact same contracts.
+ */
+export function assertClientGenerationDeterminism(
+  contractId: string,
+  firstPassContent: string,
+  secondPassContent: string
+): { deterministic: true; contentHash: string } {
+  const hash1 = computeGeneratedFileHash(firstPassContent);
+  const hash2 = computeGeneratedFileHash(secondPassContent);
+  if (hash1 !== hash2) {
+    throw new NonDeterministicGenerationError(contractId, hash1, hash2);
+  }
+  return { deterministic: true, contentHash: hash1 };
+}
