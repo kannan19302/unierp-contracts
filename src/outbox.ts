@@ -109,3 +109,56 @@ export function assertTransactionalOutbox(tx: unknown): asserts tx is OutboxAtom
     );
   }
 }
+
+export interface OutboxConsumerReceiptRecord {
+  id: string;
+  tenantId: string;
+  consumer: string;
+  outboxEventId: string;
+  processedAt: string;
+}
+
+export interface DeadLetterRecord {
+  id: string;
+  tenantId: string;
+  outboxDeliveryId: string;
+  outboxEventId: string;
+  destination: string;
+  attempts: number;
+  lastError: string;
+  deadAt: string;
+  status: "DEAD" | "REPLAYED" | "ARCHIVED";
+}
+
+export interface OutboxDeliveryOptions {
+  maxAttempts?: number;
+  initialBackoffMs?: number;
+  maxBackoffMs?: number;
+  leaseDurationMs?: number;
+}
+
+export class DuplicateEventIgnoredException extends Error {
+  constructor(consumer: string, outboxEventId: string) {
+    super(`Idempotency guard: Event "${outboxEventId}" was already processed by consumer "${consumer}". Redelivery ignored with zero duplicate effect.`);
+    this.name = "DuplicateEventIgnoredException";
+  }
+}
+
+/**
+ * Ensures exactly-once/idempotent processing by consumer receipt.
+ */
+export async function processOutboxEventIdempotent<T>(
+  consumerId: string,
+  event: OutboxEventRecord<T>,
+  receiptsStore: Set<string>,
+  handler: (evt: OutboxEventRecord<T>) => Promise<void>
+): Promise<{ executed: boolean; duplicate: boolean }> {
+  const receiptKey = `${consumerId}:${event.id}`;
+  if (receiptsStore.has(receiptKey)) {
+    return { executed: false, duplicate: true };
+  }
+
+  await handler(event);
+  receiptsStore.add(receiptKey);
+  return { executed: true, duplicate: false };
+}

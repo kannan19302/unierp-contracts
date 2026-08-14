@@ -43,4 +43,50 @@ describe("Transactional Outbox Primitives", () => {
     expect(() => assertTransactionalOutbox({})).toThrow(DualWriteNonAtomicError);
     expect(() => assertTransactionalOutbox({ outboxEvent: {} })).toThrow(DualWriteNonAtomicError);
   });
+
+  it("ensures redelivered event produces zero duplicate effect with receipt idempotency", async () => {
+    const receiptsStore = new Set<string>();
+    let executionCount = 0;
+
+    const event = {
+      id: "evt-999",
+      tenantId: "t-1",
+      eventName: "invoice.approved",
+      eventVersion: 1,
+      aggregateType: "Invoice",
+      aggregateId: "inv-1",
+      sequence: 1,
+      occurredAt: new Date().toISOString(),
+      payload: { amount: 100 },
+      eventKey: "Invoice:inv-1:invoice.approved:1",
+    };
+
+    const handler = async () => {
+      executionCount++;
+    };
+
+    // First delivery: should execute
+    const firstAttempt = await (await import("./outbox.js")).processOutboxEventIdempotent(
+      "consumer-ledger",
+      event,
+      receiptsStore,
+      handler
+    );
+
+    expect(firstAttempt.executed).toBe(true);
+    expect(firstAttempt.duplicate).toBe(false);
+    expect(executionCount).toBe(1);
+
+    // Redelivery / replay: must be ignored with zero duplicate effect
+    const secondAttempt = await (await import("./outbox.js")).processOutboxEventIdempotent(
+      "consumer-ledger",
+      event,
+      receiptsStore,
+      handler
+    );
+
+    expect(secondAttempt.executed).toBe(false);
+    expect(secondAttempt.duplicate).toBe(true);
+    expect(executionCount).toBe(1); // Still 1!
+  });
 });
