@@ -55,3 +55,4 @@ export interface ExtensionInstalledEvent extends DomainEvent<{
 }
 
 export * from "./notification.js";
+export * from "./schema-registry.js";
