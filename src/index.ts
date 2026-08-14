@@ -29,5 +29,6 @@ export * from "./meta-schema.js";
 export * from "./schema-completeness.js";
 export * from "./runtime-validator.js";
 export * from "./client-generator.js";
+export * from "./pagination.js";
 
 
