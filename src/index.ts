@@ -25,5 +25,6 @@ export * from "./audit.js";
 export * from "./outbox.js";
 export * from "./db-performance.js";
 export * from "./backup-restore.js";
+export * from "./meta-schema.js";
 
 
