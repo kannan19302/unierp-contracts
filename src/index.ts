@@ -13,5 +13,6 @@ export * from "./settings-migration.js";
 export * from "./settings-promotion.js";
 export * from "./errors.js";
 export * from "./health.js";
+export * from "./money.js";
 
 
