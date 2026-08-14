@@ -34,5 +34,6 @@ export * from "./idempotency.js";
 export * from "./rate-limiting.js";
 export * from "./api-versioning.js";
 export * from "./contract-compatibility.js";
+export * from "./deprecation.js";
 
 
