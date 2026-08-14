@@ -30,5 +30,6 @@ export * from "./schema-completeness.js";
 export * from "./runtime-validator.js";
 export * from "./client-generator.js";
 export * from "./pagination.js";
+export * from "./idempotency.js";
 
 
