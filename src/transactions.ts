@@ -78,7 +78,13 @@ export async function executeWithRetry<T>(
 
       if (isRetryable && attempt <= policy.maxRetries) {
         const backoff = Math.min(policy.initialBackoffMs * Math.pow(2, attempt - 1), policy.maxBackoffMs);
-        await new Promise((resolve) => setTimeout(resolve, backoff));
+        await new Promise((resolve) => {
+          if (typeof globalThis !== "undefined" && typeof (globalThis as any).setTimeout === "function") {
+            (globalThis as any).setTimeout(resolve, backoff);
+          } else {
+            resolve(undefined);
+          }
+        });
         continue;
       }
       throw err;

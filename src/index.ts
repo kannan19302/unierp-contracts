@@ -19,5 +19,6 @@ export * from "./fixtures.js";
 export * from "./connection-pool.js";
 export * from "./transactions.js";
 export * from "./soft-delete.js";
+export * from "./encryption.js";
 
 

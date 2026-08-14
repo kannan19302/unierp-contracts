@@ -48,7 +48,7 @@ export function createSoftDeletePayload(options: SoftDeleteOptions = {}): {
 /**
  * Generates canonical database update payload for restoring a soft-deleted entity.
  */
-export function createRestorePayload(options: RestoreOptions = {}): {
+export function createRestorePayload(_options: RestoreOptions = {}): {
   deletedAt: null;
   deletedBy: null;
   deletedReason: null;
