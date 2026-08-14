@@ -27,5 +27,6 @@ export * from "./db-performance.js";
 export * from "./backup-restore.js";
 export * from "./meta-schema.js";
 export * from "./schema-completeness.js";
+export * from "./runtime-validator.js";
 
 
