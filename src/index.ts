@@ -35,5 +35,6 @@ export * from "./rate-limiting.js";
 export * from "./api-versioning.js";
 export * from "./contract-compatibility.js";
 export * from "./deprecation.js";
+export * from "./consumer-contract-test.js";
 
 
