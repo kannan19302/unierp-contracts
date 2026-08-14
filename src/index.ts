@@ -22,5 +22,6 @@ export * from "./soft-delete.js";
 export * from "./encryption.js";
 export * from "./retention.js";
 export * from "./audit.js";
+export * from "./outbox.js";
 
 
