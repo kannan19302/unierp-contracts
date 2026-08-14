@@ -40,4 +40,4 @@ export * from "./sdk-compatibility.js";
 export * from "./webhook-contracts.js";
 export * from "./contract-governance.js";
 export * from "./contract-security.js";
-
+export * from "./contract-harness.js";
