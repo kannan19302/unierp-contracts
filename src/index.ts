@@ -32,5 +32,6 @@ export * from "./client-generator.js";
 export * from "./pagination.js";
 export * from "./idempotency.js";
 export * from "./rate-limiting.js";
+export * from "./api-versioning.js";
 
 
