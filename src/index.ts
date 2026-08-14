@@ -12,4 +12,6 @@ export * from "./settings-resolution.js";
 export * from "./settings-migration.js";
 export * from "./settings-promotion.js";
 export * from "./errors.js";
+export * from "./health.js";
+
 
