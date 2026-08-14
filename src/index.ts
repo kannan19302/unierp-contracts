@@ -18,5 +18,6 @@ export * from "./online-schema-change.js";
 export * from "./fixtures.js";
 export * from "./connection-pool.js";
 export * from "./transactions.js";
+export * from "./soft-delete.js";
 
 
