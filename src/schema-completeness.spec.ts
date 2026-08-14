@@ -1,6 +1,11 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { assertEndpointSchemaCompleteness, IncompleteContractSchemaError } from "./schema-completeness.ts";
+import {
+  assertEndpointSchemaCompleteness,
+  IncompleteContractSchemaError,
+  assertRfc7807ErrorPayloadConvention,
+  OffConventionErrorResponseError,
+} from "./schema-completeness.ts";
 import type { CompleteEndpointContractSpec } from "./schema-completeness.ts";
 
 describe("Request and response schema completeness", () => {
@@ -54,5 +59,39 @@ describe("Request and response schema completeness", () => {
     assert.throws(() => assertEndpointSchemaCompleteness(incompleteEndpoint), (err: any) => {
       return err instanceof IncompleteContractSchemaError && err.missingShapes.length > 0;
     });
+  });
+
+  it("passes compliant RFC 7807 error payload with registry code", () => {
+    const errorPayload = {
+      type: "https://api.unierp.io/errors/RESOURCE_NOT_FOUND",
+      title: "Resource Not Found",
+      status: 404,
+      detail: "Order order_123 was not found in the current tenant context",
+      instance: "/api/v1/orders/order_123",
+      code: "RESOURCE_NOT_FOUND",
+      timestamp: "2026-08-14T22:30:00Z",
+    };
+
+    const res = assertRfc7807ErrorPayloadConvention("/api/v1/orders/order_123", errorPayload);
+    assert.equal(res.verified, true);
+  });
+
+  it("throws OffConventionErrorResponseError when error response misses RFC 7807 required fields", () => {
+    const nonCompliantError = {
+      error: "Not Found",
+      status: 404,
+      // missing type, title, detail, instance, code, timestamp
+    };
+
+    assert.throws(
+      () => assertRfc7807ErrorPayloadConvention("/api/v1/orders/order_123", nonCompliantError as any),
+      (err: any) => {
+        return (
+          err instanceof OffConventionErrorResponseError &&
+          err.endpoint === "/api/v1/orders/order_123" &&
+          err.missingFields.includes("code")
+        );
+      }
+    );
   });
 });

@@ -103,3 +103,44 @@ export function assertEndpointSchemaCompleteness(spec: CompleteEndpointContractS
 
   return { complete: true };
 }
+
+export class OffConventionErrorResponseError extends Error {
+  public readonly endpoint: string;
+  public readonly missingFields: string[];
+
+  constructor(endpoint: string, missingFields: string[]) {
+    super(
+      `Off-convention error response returned by "${endpoint}". Missing required RFC 7807 / registry fields:\n - ${missingFields.join("\n - ")}`
+    );
+    this.name = "OffConventionErrorResponseError";
+    this.endpoint = endpoint;
+    this.missingFields = missingFields;
+  }
+}
+
+/**
+ * Asserts that an actual error payload emitted by an endpoint satisfies the canonical RFC 7807 error shape.
+ */
+export function assertRfc7807ErrorPayloadConvention(
+  endpoint: string,
+  payload: Record<string, unknown>
+): { verified: true } {
+  const missing: string[] = [];
+  const required = ["type", "title", "status", "detail", "instance", "code", "timestamp"];
+
+  for (const field of required) {
+    if (!(field in payload) || payload[field] === undefined || payload[field] === null || payload[field] === "") {
+      missing.push(field);
+    }
+  }
+
+  if (typeof payload.status !== "number" || payload.status < 400 || payload.status > 599) {
+    missing.push("status (must be HTTP status code 400-599)");
+  }
+
+  if (missing.length > 0) {
+    throw new OffConventionErrorResponseError(endpoint, missing);
+  }
+
+  return { verified: true };
+}
