@@ -8,8 +8,6 @@
  *    Every consumer's client is generated; a hand-edited generated file fails CI"
  */
 
-import { createHash } from "node:crypto";
-
 export interface ClientGenerationTarget {
   language: "TYPESCRIPT" | "DART" | "PYTHON" | "GO" | "JAVA";
   outputPath: string;
@@ -46,7 +44,13 @@ export class HandEditedGeneratedFileError extends Error {
  * Computes deterministic hash of generated client file content.
  */
 export function computeGeneratedFileHash(content: string): string {
-  return createHash("sha256").update(content.trim()).digest("hex");
+  let hash = 0x811c9dc5;
+  const str = content.trim();
+  for (let i = 0; i < str.length; i++) {
+    hash ^= str.charCodeAt(i);
+    hash += (hash << 1) + (hash << 4) + (hash << 7) + (hash << 8) + (hash << 24);
+  }
+  return (hash >>> 0).toString(16).padStart(8, "0");
 }
 
 /**
@@ -60,6 +64,43 @@ export function assertGeneratedClientIntegrity(
   const actualHash = computeGeneratedFileHash(actualContent);
   if (actualHash !== manifestHash) {
     throw new HandEditedGeneratedFileError(filePath, manifestHash, actualHash);
+  }
+  return { verified: true };
+}
+
+export interface DifferentialContractParity {
+  contractId: string;
+  typescriptTypes: string[];
+  dartTypes: string[];
+  fieldCount: number;
+}
+
+export class DartContractDivergenceError extends Error {
+  public readonly contractId: string;
+  public readonly missingInDart: string[];
+
+  constructor(contractId: string, missingInDart: string[]) {
+    super(
+      `Dart client divergence detected for contract "${contractId}". Missing or incompatible fields/types in Dart generation: ${missingInDart.join(", ")}`
+    );
+    this.name = "DartContractDivergenceError";
+    this.contractId = contractId;
+    this.missingInDart = missingInDart;
+  }
+}
+
+/**
+ * Asserts contract parity between TypeScript and Dart client codebases.
+ */
+export function assertDartDifferentialParity(
+  contractId: string,
+  canonicalFields: string[],
+  dartGeneratedFields: string[]
+): { verified: true } {
+  const dartFieldSet = new Set(dartGeneratedFields);
+  const missing = canonicalFields.filter((f) => !dartFieldSet.has(f));
+  if (missing.length > 0) {
+    throw new DartContractDivergenceError(contractId, missing);
   }
   return { verified: true };
 }

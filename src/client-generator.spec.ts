@@ -4,6 +4,8 @@ import {
   computeGeneratedFileHash,
   assertGeneratedClientIntegrity,
   HandEditedGeneratedFileError,
+  assertDartDifferentialParity,
+  DartContractDivergenceError,
 } from "./client-generator.ts";
 
 describe("Client generation integrity", () => {
@@ -24,6 +26,30 @@ describe("Client generation integrity", () => {
       () => assertGeneratedClientIntegrity("sdk/client.ts", handEditedCode, originalHash),
       (err: any) => {
         return err instanceof HandEditedGeneratedFileError && err.actualHash !== originalHash;
+      }
+    );
+  });
+
+  it("asserts parity between canonical TypeScript contracts and Dart client definitions", () => {
+    const canonicalFields = ["id", "tenantId", "status", "createdAt", "updatedAt"];
+    const dartGeneratedFields = ["id", "tenantId", "status", "createdAt", "updatedAt"];
+
+    const res = assertDartDifferentialParity("OrderContract", canonicalFields, dartGeneratedFields);
+    assert.equal(res.verified, true);
+  });
+
+  it("throws DartContractDivergenceError when Dart generation misses canonical fields", () => {
+    const canonicalFields = ["id", "tenantId", "status", "createdAt", "updatedAt"];
+    const incompleteDartFields = ["id", "tenantId", "status"]; // missing createdAt, updatedAt
+
+    assert.throws(
+      () => assertDartDifferentialParity("OrderContract", canonicalFields, incompleteDartFields),
+      (err: any) => {
+        return (
+          err instanceof DartContractDivergenceError &&
+          err.contractId === "OrderContract" &&
+          err.missingInDart.includes("createdAt")
+        );
       }
     );
   });
