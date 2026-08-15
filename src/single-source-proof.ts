@@ -133,7 +133,7 @@ export function assertNoHandMaintainedDuplicate(
   if (handMaintained.length > 0) {
     throw new HandMaintainedDuplicateDetectedError(
       artifactDescriptor.category,
-      artifactDescriptor.generatedArtifactPaths[0],
+      artifactDescriptor.generatedArtifactPaths[0] || "",
       artifactDescriptor.canonicalSourcePath,
       `Operations ${handMaintained.join(", ")} exist in canonical source but are absent ` +
         `from the generated artefact — they appear to have been added manually.`
