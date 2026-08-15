@@ -4,8 +4,8 @@ import {
   evaluateContractChangeGovernance,
   ContractGovernanceReviewMissingError,
   BLAST_RADIUS_GOVERNANCE_POLICY,
-} from "./contract-governance.ts";
-import type { CanonicalEndpointContract } from "./contract-compatibility.ts";
+} from "./contract-governance.js";
+import type { CanonicalEndpointContract } from "./contract-compatibility.js";
 
 describe("Contract Governance Review Requirements (P12-080)", () => {
   const baseEndpoint: CanonicalEndpointContract = {
