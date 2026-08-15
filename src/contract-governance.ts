@@ -8,7 +8,7 @@
  *    A breaking contract change cannot land without the declared review, proven by test"
  */
 
-import { classifyContractChanges, type CanonicalEndpointContract } from "./contract-compatibility.js";
+import { classifyContractChanges, type CanonicalEndpointContract } from "./contract-compatibility.ts";
 
 export type BlastRadiusTier = "TIER_1_TRIVIAL" | "TIER_2_COMPATIBLE_EXT" | "TIER_3_BREAKING_MAJOR";
 
