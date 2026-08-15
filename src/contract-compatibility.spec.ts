@@ -4,8 +4,8 @@ import {
   classifyContractChanges,
   assertContractCompatibility,
   BreakingContractChangeDetectedError,
-} from "./contract-compatibility.ts";
-import type { CanonicalEndpointContract } from "./meta-schema.ts";
+} from "../dist/contract-compatibility.js";
+import type { CanonicalEndpointContract } from "../dist/meta-schema.js";
 
 describe("Contract compatibility classification", () => {
   const baseContract: CanonicalEndpointContract = {
