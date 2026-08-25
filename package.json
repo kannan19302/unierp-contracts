@@ -6,6 +6,9 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
+    "check:control-centers": "npm run build && node scripts/check-control-center-catalog.mjs",
+    "check:control-center-contracts": "npm run build && node scripts/check-control-center-contract-release.mjs",
+    "check:control-center-manifests": "npm run build && node scripts/check-control-center-manifests.mjs",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
