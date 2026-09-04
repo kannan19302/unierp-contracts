@@ -50,3 +50,4 @@ export interface ProvisionTenantResponse {
 }
 
 export * from "./notification.js";
+export * from "./analytics.js";
