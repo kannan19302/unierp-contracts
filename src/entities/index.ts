@@ -40,4 +40,3 @@ export interface AuditLogEntry {
 }
 
 export * from "./notification.js";
-export * from "./analytics.js";

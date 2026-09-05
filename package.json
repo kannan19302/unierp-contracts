@@ -13,14 +13,19 @@
     "check:control-centers": "npm run build && node scripts/check-control-center-catalog.mjs",
     "check:control-center-contracts": "npm run build && node scripts/check-control-center-contract-release.mjs",
     "check:control-center-manifests": "npm run build && node scripts/check-control-center-manifests.mjs",
+    "test": "vitest run",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
-    "typescript": "^5.7.0"
+    "typescript": "^5.7.0",
+    "vitest": "2.1.9"
   },
   "files": [
     "dist",
     "src",
     "README.md"
-  ]
+  ],
+  "dependencies": {
+    "zod": "^3.24.0"
+  }
 }

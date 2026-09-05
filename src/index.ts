@@ -49,3 +49,4 @@ export * from "./builder-conformance.js";
 export * from "./control-centers.js";
 export * from "./control-center-contract-release.js";
 export * from "./control-center-manifest.js";
+export * from "./analytics/index.js";
