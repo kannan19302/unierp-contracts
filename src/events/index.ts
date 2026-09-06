@@ -19,15 +19,7 @@ export interface DomainEvent<T = unknown> {
   payload: T;
 }
 
-// Finance events
-export interface InvoiceApprovedEvent extends DomainEvent<{
-  invoiceId: string;
-  amount: number;
-  currency: string;
-  customerId: string;
-}> {
-  eventType: "finance.invoice.approved";
-}
+export * from "./finance.js";
 
 // Tenant lifecycle events
 export interface TenantProvisionedEvent extends DomainEvent<{
