@@ -98,3 +98,69 @@ export const ClosePeriodRequestSchema = z.object({
 });
 
 export type ClosePeriodRequest = z.infer<typeof ClosePeriodRequestSchema>;
+
+// ─── Financial Reports Query Schemas ────────────────────────────────────────
+export const GetBalanceSheetQuerySchema = z.object({
+  asOfDate: z.string().optional(),
+  bookId: z.string().optional(),
+});
+
+export type GetBalanceSheetQuery = z.infer<typeof GetBalanceSheetQuerySchema>;
+
+export const GetProfitLossQuerySchema = z.object({
+  startDate: z.string().optional(),
+  endDate: z.string().optional(),
+  bookId: z.string().optional(),
+});
+
+export type GetProfitLossQuery = z.infer<typeof GetProfitLossQuerySchema>;
+
+export const GetCashFlowQuerySchema = z.object({
+  startDate: z.string().optional(),
+  endDate: z.string().optional(),
+  bookId: z.string().optional(),
+});
+
+export type GetCashFlowQuery = z.infer<typeof GetCashFlowQuerySchema>;
+
+// ─── Dynamic Allocations ────────────────────────────────────────────────────
+export const AllocationTargetInputSchema = z.object({
+  accountId: z.string().min(1),
+  costCenterId: z.string().optional(),
+  departmentId: z.string().optional(),
+  percentage: z.number().min(0).max(100).optional(),
+  ratioWeight: z.number().positive().optional(),
+});
+
+export const CreateAllocationRuleRequestSchema = z.object({
+  name: z.string().min(1).max(200),
+  description: z.string().max(1000).optional(),
+  allocationType: z.enum(["STATIC_PCT", "DYNAMIC_STAT"]),
+  basisType: z.enum(["HEADCOUNT", "SQUARE_FOOTAGE", "REVENUE"]).optional(),
+  sourceAccountId: z.string().min(1),
+  targetAllocations: z.array(AllocationTargetInputSchema).min(1),
+});
+
+export type CreateAllocationRuleRequest = z.infer<typeof CreateAllocationRuleRequestSchema>;
+
+export const ExecuteAllocationRunRequestSchema = z.object({
+  periodStart: z.string().min(1),
+  periodEnd: z.string().min(1),
+});
+
+export type ExecuteAllocationRunRequest = z.infer<typeof ExecuteAllocationRunRequestSchema>;
+
+// ─── Finance Settings ───────────────────────────────────────────────────────
+export const UpdateFinanceSettingsRequestSchema = z.object({
+  baseCurrency: z.string().length(3).optional(),
+  accountingStandard: z.enum(["GAAP", "IFRS"]).optional(),
+  fiscalYearStartMonth: z.number().min(1).max(12).optional(),
+  lockDate: z.string().nullable().optional(),
+  autoPostRecurring: z.boolean().optional(),
+  requireMakerChecker: z.boolean().optional(),
+  priceMatchTolerancePct: z.number().min(0).max(100).optional(),
+  defaultPaymentTermsDays: z.number().min(0).max(365).optional(),
+});
+
+export type UpdateFinanceSettingsRequest = z.infer<typeof UpdateFinanceSettingsRequestSchema>;
+

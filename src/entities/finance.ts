@@ -140,3 +140,110 @@ export interface FinanceLeaseEntity {
   interestRate: number;
   status: "ACTIVE" | "TERMINATED" | "EXPIRED";
 }
+
+export interface AllocationTargetEntity {
+  accountId: string;
+  costCenterId?: string;
+  departmentId?: string;
+  percentage?: number;
+  ratioWeight?: number;
+}
+
+export interface AllocationRuleEntity {
+  id: string;
+  tenantId: string;
+  name: string;
+  description?: string;
+  isActive: boolean;
+  allocationType: "STATIC_PCT" | "DYNAMIC_STAT";
+  basisType?: "HEADCOUNT" | "SQUARE_FOOTAGE" | "REVENUE" | null;
+  sourceAccountId: string;
+  targetAllocations: AllocationTargetEntity[];
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface AllocationRunEntity {
+  id: string;
+  tenantId: string;
+  ruleId: string;
+  runDate: Date;
+  periodStart: Date;
+  periodEnd: Date;
+  allocatedAmount: number;
+  journalId?: string | null;
+  status: "DRAFT" | "POSTED";
+  createdAt: Date;
+}
+
+export interface BudgetScenarioEntity {
+  id: string;
+  tenantId: string;
+  name: string;
+  fiscalYear: number;
+  description?: string;
+  status: "DRAFT" | "ACTIVE" | "ARCHIVED";
+  totalBudgeted: number;
+  createdAt: Date;
+}
+
+export interface BankStatementTransactionEntity {
+  id: string;
+  statementId: string;
+  date: Date;
+  description: string;
+  amount: number;
+  reference?: string;
+  matched: boolean;
+}
+
+export interface BankStatementEntity {
+  id: string;
+  tenantId: string;
+  bankAccountId: string;
+  format: "MT940" | "CAMT053" | "CSV";
+  openingBalance: number;
+  closingBalance: number;
+  statementDate: Date;
+  transactions: BankStatementTransactionEntity[];
+  createdAt: Date;
+}
+
+export interface TaxJurisdictionEntity {
+  id: string;
+  tenantId: string;
+  code: string;
+  name: string;
+  country: string;
+  stateOrProvince?: string;
+  rate: number;
+  isActive: boolean;
+}
+
+export interface TaxFilingEntity {
+  id: string;
+  tenantId: string;
+  jurisdictionId: string;
+  periodStart: Date;
+  periodEnd: Date;
+  grossRevenue: number;
+  taxableRevenue: number;
+  taxDue: number;
+  taxPaid: number;
+  status: "DRAFT" | "FILED" | "PAID";
+  filingDate?: Date;
+}
+
+export interface FinanceSettingsEntity {
+  tenantId: string;
+  baseCurrency: string;
+  accountingStandard: "GAAP" | "IFRS";
+  fiscalYearStartMonth: number; // 1-12
+  lockDate?: Date | null;
+  autoPostRecurring: boolean;
+  requireMakerChecker: boolean;
+  priceMatchTolerancePct: number;
+  defaultPaymentTermsDays: number;
+  updatedAt: Date;
+}
+
