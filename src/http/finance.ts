@@ -164,3 +164,84 @@ export const UpdateFinanceSettingsRequestSchema = z.object({
 
 export type UpdateFinanceSettingsRequest = z.infer<typeof UpdateFinanceSettingsRequestSchema>;
 
+// ─── Strata v2 Finance Workflows & Interactive Actions ───────────────────────
+
+export const MonthEndCloseTaskToggleSchema = z.object({
+  taskId: z.string().min(1),
+  completed: z.boolean(),
+  notes: z.string().optional(),
+});
+export type MonthEndCloseTaskToggle = z.infer<typeof MonthEndCloseTaskToggleSchema>;
+
+export const ArInvoiceFollowUpSchema = z.object({
+  invoiceId: z.string().min(1),
+  promisedPaymentDate: z.string().optional(),
+  notes: z.string().min(1),
+  action: z.enum(["RECORD_PROMISE", "SEND_REMINDER", "ESCALATE_COLLECTION"]).default("RECORD_PROMISE"),
+});
+export type ArInvoiceFollowUp = z.infer<typeof ArInvoiceFollowUpSchema>;
+
+export const ApResolveVarianceSchema = z.object({
+  billId: z.string().min(1),
+  varianceAmount: z.number(),
+  resolutionType: z.enum(["PRICE_VARIANCE_ACCRUAL", "QUANTITY_SHORTAGE_CREDIT", "APPROVE_UNDER_TOLERANCE"]),
+  approvalNotes: z.string().min(1),
+});
+export type ApResolveVariance = z.infer<typeof ApResolveVarianceSchema>;
+
+export const BankStatementImportSchema = z.object({
+  bankAccountId: z.string().min(1),
+  format: z.enum(["OFX", "QIF", "CSV", "CAMT053"]).default("OFX"),
+  statementDate: z.string(),
+  filename: z.string().min(1),
+  transactionsCount: z.number().int().nonnegative().optional(),
+});
+export type BankStatementImport = z.infer<typeof BankStatementImportSchema>;
+
+export const AssetRegistrationSchema = z.object({
+  assetNumber: z.string().min(1),
+  name: z.string().min(1),
+  category: z.string().min(1),
+  location: z.string().min(1),
+  acquisitionDate: z.string(),
+  cost: z.number().positive(),
+  salvageValue: z.number().nonnegative().default(0),
+  usefulLifeMonths: z.number().int().positive().default(60),
+  depreciationMethod: z.enum(["STRAIGHT_LINE", "DECLINING_BALANCE", "SUM_OF_YEARS_DIGITS"]).default("STRAIGHT_LINE"),
+});
+export type AssetRegistration = z.infer<typeof AssetRegistrationSchema>;
+
+export const AssetDepreciationRunSchema = z.object({
+  period: z.string().min(1), // e.g. "2026-08"
+  assetIds: z.array(z.string()).optional(), // if omitted, runs for all active assets
+  confirmPosting: z.boolean().default(true),
+});
+export type AssetDepreciationRun = z.infer<typeof AssetDepreciationRunSchema>;
+
+export const TaxFilingSubmitSchema = z.object({
+  filingId: z.string().min(1),
+  jurisdiction: z.string().min(1),
+  period: z.string().min(1),
+  taxAmount: z.number(),
+  confirmationCode: z.string().optional(),
+});
+export type TaxFilingSubmit = z.infer<typeof TaxFilingSubmitSchema>;
+
+export const BudgetDriverUpdateSchema = z.object({
+  scenario: z.enum(["BASE", "GROWTH", "DOWNSIDE"]).default("BASE"),
+  revenueGrowthPct: z.number().min(-100).max(500),
+  headcountGrowthPct: z.number().min(-100).max(500),
+  unitCostInflationPct: z.number().min(-100).max(500),
+  comments: z.string().optional(),
+});
+export type BudgetDriverUpdate = z.infer<typeof BudgetDriverUpdateSchema>;
+
+export const FinancialReportExportSchema = z.object({
+  reportType: z.enum(["PROFIT_LOSS", "BALANCE_SHEET", "CASH_FLOW", "TRIAL_BALANCE"]),
+  period: z.string().min(1),
+  format: z.enum(["PDF", "XLSX", "CSV", "JSON"]).default("PDF"),
+  comparisonPeriod: z.string().optional(),
+});
+export type FinancialReportExport = z.infer<typeof FinancialReportExportSchema>;
+
+
