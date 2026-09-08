@@ -292,3 +292,32 @@ export const RunIntercompanyEliminationsSchema = z.object({
   ruleType: z.string().optional(),
 });
 export type RunIntercompanyEliminations = z.infer<typeof RunIntercompanyEliminationsSchema>;
+
+export const ReverseGlJournalSchema = z.object({
+  entryNumber: z.string().min(1),
+  reversalDate: z.string().optional(),
+  reason: z.string().min(1),
+});
+export type ReverseGlJournal = z.infer<typeof ReverseGlJournalSchema>;
+
+export const CreateManualJournalEntrySchema = z.object({
+  entryNumber: z.string().optional(),
+  date: z.string(),
+  reference: z.string().optional(),
+  description: z.string().min(1),
+  journalType: z.enum(["STANDARD", "ADJUSTING", "CLOSING", "REVERSING"]).default("STANDARD"),
+  currency: z.string().default("USD"),
+  lines: z
+    .array(
+      z.object({
+        accountId: z.string().optional(),
+        accountCode: z.string().min(1),
+        accountName: z.string().min(1),
+        description: z.string().optional(),
+        debit: z.number().nonnegative().default(0),
+        credit: z.number().nonnegative().default(0),
+      }),
+    )
+    .min(2),
+});
+export type CreateManualJournalEntry = z.infer<typeof CreateManualJournalEntrySchema>;
