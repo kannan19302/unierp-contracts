@@ -244,4 +244,51 @@ export const FinancialReportExportSchema = z.object({
 });
 export type FinancialReportExport = z.infer<typeof FinancialReportExportSchema>;
 
+export const PostGlJournalSchema = z.object({
+  entryNumber: z.string().min(1),
+  notes: z.string().optional(),
+});
+export type PostGlJournal = z.infer<typeof PostGlJournalSchema>;
 
+export const RecordArPaymentSchema = z.object({
+  invoiceId: z.string().min(1),
+  amount: z.number().positive(),
+  paymentMethod: z.string().default("ACH"),
+  reference: z.string().optional(),
+  paymentDate: z.string().optional(),
+});
+export type RecordArPayment = z.infer<typeof RecordArPaymentSchema>;
+
+export const PayApBillSchema = z.object({
+  billId: z.string().min(1),
+  paymentMethod: z.string().default("ACH_CREDIT"),
+  scheduledDate: z.string().optional(),
+});
+export type PayApBill = z.infer<typeof PayApBillSchema>;
+
+export const ReconcileBankTransactionSchema = z.object({
+  transactionId: z.string().min(1),
+  matchedRecordId: z.string().optional(),
+  reconciliationNotes: z.string().optional(),
+});
+export type ReconcileBankTransaction = z.infer<typeof ReconcileBankTransactionSchema>;
+
+export const UpdateTaxStatusSchema = z.object({
+  returnId: z.string().min(1),
+  targetStatus: z.enum(["DRAFT", "VALIDATED", "READY_FOR_APPROVAL", "APPROVED", "FILED"]),
+  notes: z.string().optional(),
+});
+export type UpdateTaxStatus = z.infer<typeof UpdateTaxStatusSchema>;
+
+export const RunFxRevaluationSchema = z.object({
+  period: z.string().min(1),
+  autoReverse: z.boolean().default(true),
+  rates: z.record(z.string(), z.number()).optional(),
+});
+export type RunFxRevaluation = z.infer<typeof RunFxRevaluationSchema>;
+
+export const RunIntercompanyEliminationsSchema = z.object({
+  period: z.string().optional(),
+  ruleType: z.string().optional(),
+});
+export type RunIntercompanyEliminations = z.infer<typeof RunIntercompanyEliminationsSchema>;
