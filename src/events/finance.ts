@@ -3,6 +3,91 @@
  */
 import type { DomainEvent } from "./index.js";
 
+/** Dependency direction: taskId waits for dependsOnTaskId. IDs are tenant scoped. */
+export interface CloseDependencyPayload {
+  dependencyId: string;
+  taskId: string;
+  dependsOnTaskId: string;
+  dependencyType: string;
+  lagDays: number;
+  isCritical: boolean;
+}
+
+export interface CloseDependencyCreatedEvent extends DomainEvent<CloseDependencyPayload> {
+  eventType: "finance.close.dependency.created";
+  version: 1;
+}
+
+export interface CloseDependencyDeletedEvent extends DomainEvent<CloseDependencyPayload> {
+  eventType: "finance.close.dependency.deleted";
+  version: 1;
+}
+
+/** Emitted for each immutable policy revision; tenant identity is in the envelope. */
+export interface CloseSlaPolicyVersionCreatedEvent extends DomainEvent<{
+  policyId: string;
+  policyVersionId: string;
+  policyVersion: number;
+}> {
+  eventType: "finance.close.sla.policy.version.created";
+  version: 1;
+}
+
+/** A retired policy cannot receive revisions or new task assignments. */
+export interface CloseSlaPolicyRetiredEvent extends DomainEvent<{
+  policyId: string;
+  lastVersion: number;
+  retiredBy: string;
+}> {
+  eventType: "finance.close.sla.policy.retired";
+  version: 1;
+}
+
+export interface CloseEscalationRuleChangedEvent extends DomainEvent<{
+  ruleId: string;
+  action: "created" | "updated" | "retired";
+  isActive: boolean;
+}> {
+  eventType: "finance.close.escalation-rule.changed";
+  version: 1;
+}
+
+export interface CloseAnalyticsSnapshotCapturedEvent extends DomainEvent<{
+  snapshotId: string;
+  periodId: string;
+  totalTasks: number;
+  completedTasks: number;
+  overdueTasks: number;
+  breachedSlas: number;
+}> {
+  eventType: "finance.close.analytics.snapshot.captured";
+  version: 1;
+}
+
+/** Applied deadlines are snapshots and must not be recomputed from a later policy revision. */
+export interface CloseTaskSlaAssignedEvent extends DomainEvent<{
+  taskSlaId: string;
+  taskId: string;
+  policyVersionId: string | null;
+  startedAt: string;
+  responseDeadlineAt: string | null;
+  deadlineAt: string;
+}> {
+  eventType: "finance.close.sla.task.assigned";
+  version: 1;
+}
+
+export interface CloseTaskSlaStatusChangedEvent extends DomainEvent<{
+  taskSlaId: string;
+  taskId: string;
+  previousStatus: string;
+  status: string;
+  changedBy: string;
+}> {
+  eventType: "finance.close.sla.task.status.changed";
+  version: 1;
+}
+
 export interface InvoiceCreatedEvent extends DomainEvent<{
   invoiceId: string;
   invoiceNumber: string;

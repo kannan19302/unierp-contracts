@@ -2,6 +2,7 @@
  * L0 Finance HTTP Contracts — Zod schemas & DTOs for Finance endpoints.
  */
 import { z } from "zod";
+export * from "./finance-close-sla.js";
 
 // ─── Accounts & Chart of Accounts ──────────────────────────────────────────
 export const CreateAccountRequestSchema = z.object({
