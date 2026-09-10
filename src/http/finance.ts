@@ -3,6 +3,10 @@
  */
 import { z } from "zod";
 export * from "./finance-close-sla.js";
+export * from "./finance-tax-provisioning.js";
+export * from "./finance-tax-operations.js";
+export * from "./finance-asset-operations.js";
+export * from "./finance-tax-nexus.js";
 
 // ─── Accounts & Chart of Accounts ──────────────────────────────────────────
 export const CreateAccountRequestSchema = z.object({
